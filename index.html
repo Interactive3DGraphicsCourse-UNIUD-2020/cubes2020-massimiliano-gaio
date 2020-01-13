@@ -75,11 +75,9 @@
 		    return data;
 		}
 		function aggiungiCubi(d, img){
-			var cube;
 			var geometry = new THREE.BoxGeometry(1,1,1);
 			var material = new Array(d.length);
 			var colore, h,s,l;
-
 			for(var i=0; i< d.length; i++){
 
 				if(d[i] < 5){
@@ -100,7 +98,7 @@
 					material[i] = new THREE.MeshBasicMaterial({color: colore});
 				}	
 
-				cube = new THREE.Mesh( geometry, material[i]);
+				var cube = new THREE.Mesh( geometry, material[i] );
 
 				var x = i%img.width - img.width/2;
 				var y = d[i]/5;
@@ -215,8 +213,6 @@
 
 			
 			scene.add(creaPonte(-10,3,0));
-			
-			scene.add(creaUmanoide(-20, 5.5, -20));
 
 			scene.add(creaCasa(-24, 5.5, -20));
 
@@ -287,10 +283,9 @@
 						rimuoviNeveAOggetto(listaCubi);
 						rimuoviNeveAFigli("foglie");
 
-					}//else if(frame == fineLoop){
-					//	resetAnimazioneNuvole();
-					//	loopCompletato = true;
-					//}
+					}else if(frame == fineLoop){
+						loopCompletato = true;
+					}
 					
 				}
 			}		

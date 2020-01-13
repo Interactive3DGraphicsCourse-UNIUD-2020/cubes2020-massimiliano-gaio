@@ -129,63 +129,11 @@ function creaParete(w, h, d, rotationZ, rotationY, traslationX, traslationY, tra
 	mesh.position.z += traslationZ; 
 	return mesh;
 }
-function creaUmanoide(posX, posY, posZ){
-	var umanoide = new THREE.Object3D();
-	var lato = 1;
-
-	//testa
-	var geometriaTesta = new THREE.BoxGeometry(lato,lato,lato);
-	var materialTesta = new THREE.MeshBasicMaterial({ color: creaHSLColor(100,40,40) });
-	var meshTesta = new THREE.Mesh(geometriaTesta,materialTesta);	
-	
-	//busto
-	var geometriaBusto = new THREE.BoxGeometry(lato * 1.75,lato * 2,lato );
-	var materialBusto = new THREE.MeshBasicMaterial({ color: creaHSLColor(80,40,40) });
-	var meshBusto = new THREE.Mesh(geometriaBusto,materialBusto);		
-	meshBusto.position.y -= 1.5;
-
-	//braccioDx
-	var geometriaBraccioDx = new THREE.BoxGeometry(lato/2,lato * 1.75,lato/2);
-	var materialBraccioDx = new THREE.MeshBasicMaterial({ color: creaHSLColor(120,40,40) });
-	var meshBraccioDx = new THREE.Mesh(geometriaBraccioDx,materialBraccioDx);		
-	meshBraccioDx.position.y -= 1.5;	
-	meshBraccioDx.position.x += 1.1;	
-
-	//braccioSx
-	var geometriaBraccioSx = new THREE.BoxGeometry(lato/2,lato * 1.75,lato/2);
-	var materialBraccioSx = new THREE.MeshBasicMaterial({ color: creaHSLColor(120,40,40) });
-	var meshBraccioSx = new THREE.Mesh(geometriaBraccioSx,materialBraccioSx);		
-	meshBraccioSx.position.y -= 1.5;	
-	meshBraccioSx.position.x -= 1.1;	
-
-	//gambaDx
-	var geometriaGambaDx = new THREE.BoxGeometry(lato/2,lato * 1.5,lato/2);
-	var materialGambaDx = new THREE.MeshBasicMaterial({ color: creaHSLColor(120,40,40) });
-	var meshGambaDx = new THREE.Mesh(geometriaGambaDx,materialGambaDx);		
-	meshGambaDx.position.y -= 3	;	
-	meshGambaDx.position.x += 0.5;	
-
-	//gambaSx
-	var geometriaGambaSx = new THREE.BoxGeometry(lato/2,lato * 1.5,lato/2);
-	var materialGambaSx = new THREE.MeshBasicMaterial({ color: creaHSLColor(120,40,40) });
-	var meshGambaSx = new THREE.Mesh(geometriaGambaSx,materialGambaSx);		
-	meshGambaSx.position.y -= 3	;	
-	meshGambaSx.position.x -= 0.5;	
-
-	umanoide.position.set(posX, posY, posZ);
-	umanoide.add(meshTesta);
-	umanoide.add(meshBusto);
-	umanoide.add(meshBraccioDx);
-	umanoide.add(meshBraccioSx);
-	umanoide.add(meshGambaDx);
-	umanoide.add(meshGambaSx);
-	return umanoide;
-}
 
 function creaNuvola(posX, posY, posZ){
 	var nuvola = new THREE.Object3D();
 
-	for(var i = 0; i < 12; i++){
+	for(var i = 0; i < getRandomInt(7,15); i++){
 		var w = getRandomInt(2,8);
 		var h = 2;
 		var d = getRandomInt(1,8);

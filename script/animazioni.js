@@ -19,11 +19,13 @@ function animaNuvole(nuvole, destinazioni, ritorno){
 	//console.log("pos partenza "+nuvole[0].position.x + " "+nuvole[0].position.z);
 	//console.log("pos arrivo "+destinazioni[0].xPos + " "+destinazioni[0].zPos);
 	if(!ritorno){
+		console.log("dentro andata");
 		for(var i = 0; i < nuvole.length; i++){
 			muovi(nuvole[i], nuvole[i].position.x, nuvole[i].position.z, destinazioni[i].xPos,  destinazioni[i].zPos,i,
 				flag1,flag2)
 		}
 	}else{
+		console.log("dentro ritorno");
 		for(var i = 0; i < nuvole.length; i++){
 			muovi(nuvole[i], nuvole[i].position.x, nuvole[i].position.z, destinazioni[i].xPos,  destinazioni[i].zPos,i,
 				flag3,flag4)
