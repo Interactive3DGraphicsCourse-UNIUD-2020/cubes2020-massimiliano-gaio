@@ -1,0 +1,309 @@
+<html>
+	<head>
+		<title>Starting Code for 1st Project 2020</title>
+		<style>
+		
+		body {
+			font-family: Monospace;
+			background-color: #f0f0f0;
+			margin: 0px;
+			overflow: hidden;
+		}
+		
+		canvas { 
+			width: 100%; 
+			height: 100%;
+		}
+	
+	</style>
+		<script src="lib/three.min.js"></script>
+		<script src="lib/stats.min.js"></script>
+		<script src="lib/Coordinates.js"></script>
+		<script src="lib/OrbitControls.js"></script>
+		<script src="script/oggetti.js"></script>
+		<script src="script/animazioni.js"></script>
+	</head>
+	<body>
+		
+		<script>
+		
+		var scene, camera, renderer, controls, stats;
+
+		var pini = [];
+		var posizioni = [];
+		var numeroPini = 10;
+		var posizioneCubi = [];
+		var listaNuvole = [];
+		var listaDestinazioneNuvole = [];
+		var listaCubi = [];
+		var umanoide;
+		var posPartenzaNuvole = [];
+		var l = [];
+
+		var frame = 0;
+		var tempoInSec = 0;	
+		
+		//return array with height data from img, taken from: http://danni-three.blogspot.it/2013/09/threejs-heightmaps.html
+		function getHeightData(img,scale) {
+  
+		 if (scale == undefined) scale=1;
+  
+		    var canvas = document.createElement( 'canvas' );
+		    canvas.width = img.width;
+		    canvas.height = img.height;
+		    var context = canvas.getContext( '2d' );
+ 
+		    var size = img.width * img.height;
+
+		    var data = new Float32Array( size );
+ 
+		    context.drawImage(img,0,0);
+ 
+		    for ( var i = 0; i < size; i ++ ) {
+		        data[i] = 0
+		    }
+ 
+		    var imgd = context.getImageData(0, 0, img.width, img.height);
+		    var pix = imgd.data;
+ 
+		    var j=0;
+		    for (var i = 0; i<pix.length; i +=4) {
+		        var all = pix[i]+pix[i+1]+pix[i+2];  // all is in range 0 - 255*3
+		        data[j++] = scale*all/3;   
+		    }
+     
+		    return data;
+		}
+		function aggiungiCubi(d, img){
+			var cube;
+			var geometry = new THREE.BoxGeometry(1,1,1);
+			var material = new Array(d.length);
+			var colore, h,s,l;
+
+			for(var i=0; i< d.length; i++){
+
+				if(d[i] < 5){
+					h = 200;
+					s = 80;
+					l = d[i] * 5;
+					colore = creaHSLColor(h,s,l);
+
+					material[i] = new THREE.MeshBasicMaterial({color: colore});
+
+
+				}
+				else if(d[i] >= 5){
+					h = 107;
+					s = 58;
+					l = d[i];
+					colore = creaHSLColor(h,s,l);
+					material[i] = new THREE.MeshBasicMaterial({color: colore});
+				}	
+
+				cube = new THREE.Mesh( geometry, material[i]);
+
+				var x = i%img.width - img.width/2;
+				var y = d[i]/5;
+				var z = Math.trunc(i/img.height) - img.height/2
+
+
+				posizioneCubi.push({"xPos": x,"yPos": y,"zPos": z});
+				listaCubi.push({"obj": cube, "coloreH": h, "coloreS": s,"coloreL": l});
+				cube.position.set(x, y, z);
+				//console.log("x: "+(i%img.width - img.width/2)+" y: "+(d[i]/5)+" z: "+(Math.trunc(i/img.height) - img.height/2));
+				scene.add( cube );
+			}
+		}
+		function creaPosizione(min, max, minEscluso, maxEscluso){
+			
+			var x = getRandomInt(min, max);
+			var z = getRandomInt(min, max);
+			if(minEscluso != null && maxEscluso != null){
+				if((x > minEscluso && x < maxEscluso) && (z > minEscluso && z < maxEscluso)){
+					return creaPosizione(min, max, minEscluso, maxEscluso);				
+			}
+
+			}
+			return {"xPos": x,"zPos": z};
+		}
+		function getField(arr, c1, c2) {
+		  for (var i = 0; i < arr.length; i++)
+		    if (arr[i][c1] == c2)
+		      return arr[i];
+		}
+		function aggiungiPiniAllaScena(){
+			for(var i = 0; i < numeroPini; i++){
+				posizioni.push(creaPosizione(-24, 24, -11, -18));	
+			}
+
+			for(var i = 0; i < posizioneCubi.length; i++){
+				if(posizioneCubi[i].yPos > 1){
+					for(var j = 0; j < posizioni.length; j++){
+						//console.log("confronto"+posizioneCubi[i].xPos +" e "+posizioni[j].xPos);	
+						if(posizioneCubi[i].xPos == posizioni[j].xPos && posizioneCubi[i].zPos == posizioni[j].zPos){
+							pini[i] = /*{"obj": */creaPino(posizioni[j].xPos, posizioneCubi[i].yPos + 4 ,posizioni[j].zPos)/*,"coloreH": 119, "coloreS": 36, "coloreL": 24}*/;
+							scene.add(pini[i]/*.obj*/);
+						}
+					}
+				}
+			}
+		}
+		function aggiungiListaFiocchiDiNeve(fiocchi){
+			for(var i = 0; i < fiocchi.length; i++){
+				scene.add(fiocchi[i]);
+				animaNeve(fiocchi[i]);
+			}
+		}
+		function creaListaFiocchiDiNeve(){
+			var fiocchiDiNeve = [];
+			for(var i = 0; i < 100; i++){
+				var posTemp = creaPosizione(-24,24, null, null);
+				fiocchiDiNeve.push(creaFioccoDiNeve(posTemp.xPos, 20, posTemp.zPos));
+			}
+			return fiocchiDiNeve;
+		}
+		function Start() {
+			scene = new THREE.Scene();
+			camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			renderer = new THREE.WebGLRenderer( {antialias: true} );
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			renderer.setClearColor( 0xf0f0f0 );
+			document.body.appendChild( renderer.domElement );
+
+						
+			stats = new Stats();
+			stats.domElement.style.position = 'absolute';
+			stats.domElement.style.top = '0px';
+			document.body.appendChild( stats.domElement );
+				
+			camera.position.set(0,25,40);
+			camera.lookAt( new THREE.Vector3(0,0,0));
+
+			hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
+			hemiLight.color.setHSL( 0.6, 1, 0.6 );
+			hemiLight.groundColor.setHSL( 0.095, 1, 0.75 );
+			hemiLight.position.set( 0, 500, 0 );
+			scene.add( hemiLight );
+
+			dirLight = new THREE.DirectionalLight( 0xffffff, 1 );
+			dirLight.color.setHSL( 0.1, 1, 0.95 );
+			dirLight.position.set( -1, 1.75, 1 );
+			dirLight.position.multiplyScalar( 50 );
+			scene.add( dirLight );
+			dirLight.castShadow = true;
+			dirLight.shadow.mapSize.width = 1024;
+			dirLight.shadow.mapSize.height = 1024;
+			// uncomment if you need to draw coordinate axes when building the scene
+			//Coordinates.drawAllAxes();
+			
+			controls = new THREE.OrbitControls( camera );
+			controls.addEventListener( 'change', Render );
+			
+			// terrain
+			var img = new Image();
+			
+			img.onload = function () {
+
+				//get height data from img
+				data = getHeightData(img,0.1);
+				aggiungiCubi(data, img);
+
+				aggiungiPiniAllaScena(data);
+				//aggiungiUmanoideAllaScena();	
+			}
+
+			
+			scene.add(creaPonte(-10,3,0));
+			
+			scene.add(creaUmanoide(-20, 5.5, -20));
+
+			scene.add(creaCasa(-24, 5.5, -20));
+
+			for(var i = 0; i < 10; i++){
+				posPartenzaNuvole.push(creaPosizione(-45,45,-30,30));
+
+				listaNuvole.push(creaNuvola(posPartenzaNuvole[i].xPos, 20, posPartenzaNuvole[i].zPos));
+				listaDestinazioneNuvole.push(creaPosizione(-20, 20, null, null));
+				scene.add(listaNuvole[i]);
+			}
+
+			img.src = "textures/heightmap.png";
+
+			l = creaListaFiocchiDiNeve();
+			
+		}
+		var loop = 1;
+		var neveInserita = false;
+		var terrenoInnevatoInserito = false;
+
+
+		var inizioNevicata = 8 * 60 * loop;
+		var inizioDepositoNeve = 9 * 60 * loop;
+		var fineDepositoNeve = 12 * 60 * loop;
+		var inizioMovimentoNuvoleRitorno =  15 * 60 * loop;
+		var inizioScioglimentoNeve = 18 * 60 * loop;
+		var fineLoop = 24 * 60;
+
+		var loopCompletato = false;
+
+		function Update() {
+			if(loopCompletato){frame = 0;loopCompletato = false;}
+			frame +=1;
+			tempoInSec = frame * 0.01667;
+			/*if(60 * 18 == frame ){
+				console.log("loop "+loop);
+				loop++; 
+			}*/	
+
+			requestAnimationFrame( Update );
+			controls.update();  
+			stats.update();
+			Render();
+
+			if(frame <= inizioMovimentoNuvoleRitorno){
+				animaNuvole(listaNuvole, listaDestinazioneNuvole, false);
+
+			}
+				
+			if(!neveInserita && frame >= inizioNevicata){
+				aggiungiListaFiocchiDiNeve(l);
+				
+				neveInserita = true;							
+			}
+
+			if(neveInserita){
+				animaNeve(l);
+				if(frame >= inizioDepositoNeve && frame < fineDepositoNeve){
+					//il terreno diventa bianco
+					aggiungiNeveAOggetto(listaCubi);
+					aggiungiNeveAFigli("foglie");
+				}
+				else if(frame > inizioMovimentoNuvoleRitorno){
+					animaNuvole(listaNuvole, posPartenzaNuvole, true);
+					rimuoviFiocchiDiNeve(l);
+					neveInserita = false;
+					if(frame < inizioScioglimentoNeve){
+						rimuoviNeveAOggetto(listaCubi);
+						rimuoviNeveAFigli("foglie");
+
+					}//else if(frame == fineLoop){
+					//	resetAnimazioneNuvole();
+					//	loopCompletato = true;
+					//}
+					
+				}
+			}		
+		}
+		
+		function Render() {
+			
+			renderer.render(scene, camera);
+		}
+		
+		Start();
+		Update();
+			
+		</script>
+	</body>
+</html>
