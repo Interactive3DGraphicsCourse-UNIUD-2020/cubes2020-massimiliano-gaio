@@ -42,3 +42,7 @@
 13.01.2020
 =============
 - Resa l'animazione ciclica, tramite reset dei timer all'interno dell'Update e impostando determinati timer per inizio e fine delle animazioni.
+
+14.01.2020
+=============
+- Cambiato il metodo di animazione: se prima era basato sui frame, adesso si basa sull'oroglio di sistema.

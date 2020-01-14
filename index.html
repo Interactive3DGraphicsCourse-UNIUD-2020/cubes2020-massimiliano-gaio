@@ -106,7 +106,8 @@
 
 
 				posizioneCubi.push({"xPos": x,"yPos": y,"zPos": z});
-				listaCubi.push({"obj": cube, "coloreH": h, "coloreS": s,"coloreL": l});
+				listaCubi.push({"obj": cube, "coloreH": h, "coloreS": s,"coloreL": l, 
+					"coloreLMin": l, "coloreLMax": l + 50});
 				cube.position.set(x, y, z);
 				//console.log("x: "+(i%img.width - img.width/2)+" y: "+(d[i]/5)+" z: "+(Math.trunc(i/img.height) - img.height/2));
 				scene.add( cube );
@@ -229,28 +230,33 @@
 			l = creaListaFiocchiDiNeve();
 			
 		}
-		var loop = 1;
+		var loop = Date.now();
 		var neveInserita = false;
 		var terrenoInnevatoInserito = false;
 
 
-		var inizioNevicata = 8 * 60 * loop;
-		var inizioDepositoNeve = 9 * 60 * loop;
-		var fineDepositoNeve = 12 * 60 * loop;
-		var inizioMovimentoNuvoleRitorno =  15 * 60 * loop;
-		var inizioScioglimentoNeve = 18 * 60 * loop;
-		var fineLoop = 24 * 60;
+		var inizioNevicata = (8 * 1000) + loop;
+		var inizioDepositoNeve = (9 * 1000) + loop;
+		var fineDepositoNeve = (12 * 1000) + loop;
+		var inizioMovimentoNuvoleRitorno =  (15 * 1000) + loop;
+		var inizioScioglimentoNeve = (18 * 1000) + loop;
+		var fineLoop = (24 * 1000) + loop;
 
 		var loopCompletato = false;
-
+		var temp1 = 0, temp2 = 0;
 		function Update() {
-			if(loopCompletato){frame = 0;loopCompletato = false;}
-			frame +=1;
-			tempoInSec = frame * 0.01667;
-			/*if(60 * 18 == frame ){
-				console.log("loop "+loop);
-				loop++; 
-			}*/	
+			frame = Date.now();
+			if(loopCompletato){
+
+				inizioNevicata += (24 * 1000);
+				inizioDepositoNeve += (24 * 1000);
+				fineDepositoNeve += (24 * 1000);
+				inizioMovimentoNuvoleRitorno += (24 * 1000);
+				inizioScioglimentoNeve += (24 * 1000);
+				fineLoop += (24 * 1000);
+
+				loopCompletato = false;
+			}
 
 			requestAnimationFrame( Update );
 			controls.update();  
@@ -261,7 +267,7 @@
 				animaNuvole(listaNuvole, listaDestinazioneNuvole, false);
 
 			}
-				
+
 			if(!neveInserita && frame >= inizioNevicata){
 				aggiungiListaFiocchiDiNeve(l);
 				
@@ -271,6 +277,7 @@
 			if(neveInserita){
 				animaNeve(l);
 				if(frame >= inizioDepositoNeve && frame < fineDepositoNeve){
+					temp1++;
 					//il terreno diventa bianco
 					aggiungiNeveAOggetto(listaCubi);
 					aggiungiNeveAFigli("foglie");
@@ -280,15 +287,17 @@
 					rimuoviFiocchiDiNeve(l);
 					neveInserita = false;
 					if(frame < inizioScioglimentoNeve){
+						temp2++;
 						rimuoviNeveAOggetto(listaCubi);
 						rimuoviNeveAFigli("foglie");
 
-					}else if(frame == fineLoop){
+					}else if(frame >= fineLoop){
 						loopCompletato = true;
 					}
 					
 				}
 			}		
+			//console.log(temp1 +" "+temp2);
 		}
 		
 		function Render() {

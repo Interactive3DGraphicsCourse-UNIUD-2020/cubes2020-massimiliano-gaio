@@ -19,13 +19,11 @@ function animaNuvole(nuvole, destinazioni, ritorno){
 	//console.log("pos partenza "+nuvole[0].position.x + " "+nuvole[0].position.z);
 	//console.log("pos arrivo "+destinazioni[0].xPos + " "+destinazioni[0].zPos);
 	if(!ritorno){
-		console.log("dentro andata");
 		for(var i = 0; i < nuvole.length; i++){
 			muovi(nuvole[i], nuvole[i].position.x, nuvole[i].position.z, destinazioni[i].xPos,  destinazioni[i].zPos,i,
 				flag1,flag2)
 		}
 	}else{
-		console.log("dentro ritorno");
 		for(var i = 0; i < nuvole.length; i++){
 			muovi(nuvole[i], nuvole[i].position.x, nuvole[i].position.z, destinazioni[i].xPos,  destinazioni[i].zPos,i,
 				flag3,flag4)
@@ -114,26 +112,38 @@ function rimuoviFiocchiDiNeve(f){
 }
 var incremento = 0;
 var incremento2 = 0;
+var incremento3 = 0;
+var valoreMaxFoglie = 35;
+var valoreMinFoglie = 24;
+
 function aggiungiNeveAOggetto(el){
 	var nuovoColore;
 	incremento += 0.2; 
 
 	for(var i = 0; i< el.length; i++){
-		if(el[i].coloreL + incremento <= 100){
+
+		if(el[i].coloreL + incremento <= el[i].coloreLMax){
 			nuovoColore = el[i].coloreL + incremento;
 
 		}else{
-			nuovoColore = 100;
+			nuovoColore = el[i].coloreLMax;
 			incremento = 0;
 		}
 		el[i].obj.material.color.set(creaHSLColor(el[i].coloreH,el[i].coloreS,nuovoColore));
 	}		
 }
 function aggiungiNeveAFigli(nomeChild){
-	incremento2 += 0.12; 
+
+	incremento2 += 0.2; 
 	scene.traverse(function(child) {	
 		if (child.name === nomeChild) {
-			child.material.color.set(creaHSLColor(119,36, 24 + incremento2));
+
+			if(valoreMinFoglie + incremento < valoreMaxFoglie){
+				child.material.color.set(creaHSLColor(119,36, valoreMinFoglie + incremento2));
+			}else{
+				incremento2 = 0;
+			}
+			
 		}
 
 	});
@@ -144,17 +154,31 @@ function rimuoviNeveAOggetto(el){
 	incremento -= 0.2; 
 
 	for(var i = 0; i< el.length; i++){
-			nuovoColore = (el[i].coloreL + incremento) > 0?el[i].coloreL + incremento:0;
-			el[i].obj.material.color.set(creaHSLColor(el[i].coloreH,el[i].coloreS,nuovoColore));
-	}		
+		coloreIniziale = el[i].coloreL;
+		if(el[i].coloreL + incremento >= el[i].coloreLMin){
+			nuovoColore = el[i].coloreL + incremento;
+
+		}else{
+			nuovoColore = el[i].coloreLMin;
+			incremento = 0;
+		}
+		el[i].obj.material.color.set(creaHSLColor(el[i].coloreH,el[i].coloreS,nuovoColore));	
+	}
 }
 function rimuoviNeveAFigli(nomeChild){
-	incremento2 -= 0.12; 
+	incremento3 += 0.2; 	
+	console.log(incremento2);
 	scene.traverse(function(child) {	
 		if (child.name === nomeChild) {
-			child.material.color.set(creaHSLColor(119,36, 24 + incremento2));
+
+			if(valoreMaxFoglie - incremento3 > valoreMinFoglie){
+				child.material.color.set(creaHSLColor(119,36, valoreMaxFoglie - incremento3));
+			}else{
+				incremento2 = 0;
+			}
+			
+			
 		}
 
 	});
-
 }

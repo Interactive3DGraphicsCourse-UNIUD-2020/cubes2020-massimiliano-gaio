@@ -11,6 +11,7 @@ function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 function  creaHSLColor(h, s, v){
+
 	return "hsl(" + h + ", " + s+"%, " + Math.trunc(v * 2) + "%)";
 }
 function creaPino(posX, posY, posZ){
