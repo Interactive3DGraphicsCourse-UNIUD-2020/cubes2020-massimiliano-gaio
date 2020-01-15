@@ -31,7 +31,7 @@
 
 		var pini = [];
 		var posizioni = [];
-		var numeroPini = 10;
+		var numeroPini = 15;
 		var posizioneCubi = [];
 		var listaNuvole = [];
 		var listaDestinazioneNuvole = [];
@@ -109,7 +109,7 @@
 				listaCubi.push({"obj": cube, "coloreH": h, "coloreS": s,"coloreL": l, 
 					"coloreLMin": l, "coloreLMax": l + 50});
 				cube.position.set(x, y, z);
-				//console.log("x: "+(i%img.width - img.width/2)+" y: "+(d[i]/5)+" z: "+(Math.trunc(i/img.height) - img.height/2));
+
 				scene.add( cube );
 			}
 		}
@@ -136,12 +136,11 @@
 			}
 
 			for(var i = 0; i < posizioneCubi.length; i++){
-				if(posizioneCubi[i].yPos > 1){
+				if(posizioneCubi[i].yPos > 1.5 && (posizioneCubi[i].xPos > -18 && posizioneCubi[i].zPos > -14)){
 					for(var j = 0; j < posizioni.length; j++){
-						//console.log("confronto"+posizioneCubi[i].xPos +" e "+posizioni[j].xPos);	
 						if(posizioneCubi[i].xPos == posizioni[j].xPos && posizioneCubi[i].zPos == posizioni[j].zPos){
-							pini[i] = /*{"obj": */creaPino(posizioni[j].xPos, posizioneCubi[i].yPos + 4 ,posizioni[j].zPos)/*,"coloreH": 119, "coloreS": 36, "coloreL": 24}*/;
-							scene.add(pini[i]/*.obj*/);
+							pini[i] = creaPino(posizioni[j].xPos, posizioneCubi[i].yPos + 4 ,posizioni[j].zPos);
+							scene.add(pini[i]);
 						}
 					}
 				}
@@ -176,8 +175,9 @@
 			stats.domElement.style.top = '0px';
 			document.body.appendChild( stats.domElement );
 				
-			camera.position.set(0,25,40);
-			camera.lookAt( new THREE.Vector3(0,0,0));
+			camera.position.set(-20,20,35);
+			camera.up = new THREE.Vector3(0,1,0);
+			camera.lookAt(new THREE.Vector3(0,0,0));
 
 			hemiLight = new THREE.HemisphereLight( 0xffffff, 0xffffff, 0.6 );
 			hemiLight.color.setHSL( 0.6, 1, 0.6 );
@@ -297,7 +297,6 @@
 					
 				}
 			}		
-			//console.log(temp1 +" "+temp2);
 		}
 		
 		function Render() {

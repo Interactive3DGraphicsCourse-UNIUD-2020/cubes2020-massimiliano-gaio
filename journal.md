@@ -46,3 +46,4 @@
 14.01.2020
 =============
 - Cambiato il metodo di animazione: se prima era basato sui frame, adesso si basa sull'oroglio di sistema.
+- Fix del bug per cui ad ogni ciclo il terreno diventa più scuro.
