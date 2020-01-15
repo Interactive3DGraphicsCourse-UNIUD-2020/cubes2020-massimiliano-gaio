@@ -18,7 +18,8 @@ Gli elementi naturali che compongono l'ambiente e che non sono integrati nella g
  ![pino](immagini/pino.PNG)
  ![nuvola](immagini/nuvola.PNG)
  ![terreno innevato](immagini/terreno2.PNG)
- L'ultima immagine permette anche di osservare i cambiamenti del terreno nel momento in cui vegnono introdotti i fiocchi di neve.
+ 
+L'ultima immagine permette anche di osservare i cambiamenti del terreno nel momento in cui vegnono introdotti i fiocchi di neve.
 
 ## Implementazione
 Come da consegna il terreno è stato generato a partire da un'immagine in scala di grigi. Tramite l'algoritmo che assegna una diversa altezza ad ogni cubo secondo il corrispondente pixel dell'immagine, è stato assegnato anche un colore diverso dipendente da tale altezza. In questo modo i pixel più scuri hanno ricoperto il ruolo del fiume (assegnando ai relativi blocchi il colore blu), mentre gli altri sono stati utilizzato come prato, assegnando diverse sfumature di verde ai cubi. 

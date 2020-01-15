@@ -1,8 +1,9 @@
-var texturePonte = new THREE.TextureLoader().load( "textures/wood.jpg" );
-var textureCasa = new THREE.TextureLoader().load( "textures/house.jpg" );
-var texturePorta = new THREE.TextureLoader().load( "textures/door.png" );
-var textureTetto = new THREE.TextureLoader().load( "textures/roof.jpg" );
-var textureNuvola = new THREE.TextureLoader().load( "textures/cloud.jpg" );
+var tl = new THREE.TextureLoader()
+var texturePonte = tl.load( "textures/wood.jpg" );
+var textureCasa = tl.load( "textures/house.jpg" );
+var texturePorta = tl.load( "textures/door.png" );
+var textureTetto = tl.load( "textures/roof.jpg" );
+var textureNuvola = tl.load( "textures/cloud.jpg" );
 
 
 function getRandomInt(min, max) {
