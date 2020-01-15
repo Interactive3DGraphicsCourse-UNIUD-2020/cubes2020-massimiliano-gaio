@@ -12,7 +12,7 @@ La caratteristica principale della scena è la pseudo-casualità. Infatti, la po
 
 ## Risultati
 Il terreno risultante dal caricamento della scena è il seguente
-![terreno di partenza](immagini/terreno.png)
+![terreno di partenza](terreno.png)
 
 Gli elementi naturali che compongono l'ambiente e che non sono integrati nella generazione automatica del terreno sono i pini, le nuvole e i fiocchi di neve. Di seguito sono riportati le immagini di questi elementi.
  ![pino](immagini/pino.png)
